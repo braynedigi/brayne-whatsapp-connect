@@ -1,0 +1,406 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
+
+/*
+ * Brayne WhatsApp Connect â€” widget styles.
+ *
+ * Everything is namespaced under `.jwa-` so a theme's own selectors cannot
+ * collide with it, and every value the operator can change is a custom
+ * property on `.jwa-root` so the widget restyles from one inline declaration.
+ *
+ * Sizes, corners and motion all respond to the platform's own conventions:
+ * `prefers-color-scheme` for dark themes, `prefers-reduced-motion` for
+ * visitors who asked for less movement, and `env(safe-area-inset-bottom)` so
+ * the button clears the iPhone home indicator.
+ */
+
+.jwa-root {
+  --jwa-color: #25d366;
+  --jwa-color-hover: #1ebd5b;
+  --jwa-size: 56px;
+  --jwa-offset: 20px;
+  --jwa-gap: 14px;
+  --jwa-z: 2147483000;
+
+  --jwa-surface: #ffffff;
+  --jwa-surface-alt: #f4f6f8;
+  --jwa-ink: #0f1419;
+  --jwa-muted: #5b6570;
+  --jwa-line: #e4e8ec;
+  --jwa-radius: 18px;
+  --jwa-shadow: 0 18px 44px rgba(15, 20, 25, 0.2), 0 3px 10px rgba(15, 20, 25, 0.12);
+
+  position: fixed;
+  bottom: calc(var(--jwa-offset) + env(safe-area-inset-bottom, 0px));
+  right: var(--jwa-offset);
+  z-index: var(--jwa-z);
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--jwa-ink);
+  color-scheme: light;
+}
+
+.jwa-root[data-position="bottom-left"] {
+  right: auto;
+  left: var(--jwa-offset);
+}
+
+.jwa-root[data-size="small"] {
+  --jwa-size: 48px;
+}
+
+.jwa-root[data-size="medium"] {
+  --jwa-size: 56px;
+}
+
+.jwa-root[data-size="large"] {
+  --jwa-size: 64px;
+}
+
+/* â”€â”€ Floating action button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.jwa-fab {
+  display: grid;
+  place-items: center;
+  width: var(--jwa-size);
+  height: var(--jwa-size);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: var(--jwa-color);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(15, 20, 25, 0.28);
+  transition:
+    background-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.jwa-fab:hover {
+  background-color: var(--jwa-color-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(15, 20, 25, 0.32);
+}
+
+.jwa-fab:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.jwa-fab:focus-visible {
+  outline: 3px solid var(--jwa-color);
+  outline-offset: 3px;
+}
+
+.jwa-fab__icon {
+  width: 56%;
+  height: 56%;
+}
+
+/* â”€â”€ Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.jwa-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--jwa-size) + var(--jwa-gap));
+  display: flex;
+  flex-direction: column;
+  width: min(360px, calc(100vw - (2 * var(--jwa-offset))));
+  max-height: min(74vh, 560px);
+  overflow: hidden;
+  background-color: var(--jwa-surface);
+  color: var(--jwa-ink);
+  border: 1px solid var(--jwa-line);
+  border-radius: var(--jwa-radius);
+  box-shadow: var(--jwa-shadow);
+  animation: jwa-rise 0.18s ease-out;
+}
+
+.jwa-root[data-position="bottom-left"] .jwa-panel {
+  right: auto;
+  left: 0;
+}
+
+/* `hidden` has to win over the `display: flex` above. */
+.jwa-panel[hidden] {
+  display: none;
+}
+
+@keyframes jwa-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.jwa-panel__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 14px 12px;
+  background-color: var(--jwa-surface-alt);
+  border-bottom: 1px solid var(--jwa-line);
+}
+
+.jwa-panel__avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: var(--jwa-color);
+  font-size: 17px;
+  line-height: 1;
+}
+
+.jwa-panel__heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.jwa-panel__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.jwa-panel__status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--jwa-muted);
+}
+
+.jwa-panel__status::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.jwa-panel__status[data-state="open"] {
+  color: #12a150;
+}
+
+.jwa-panel__status[data-state="closed"] {
+  color: #b45309;
+}
+
+.jwa-panel__close {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--jwa-muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.jwa-panel__close:hover {
+  background-color: var(--jwa-line);
+  color: var(--jwa-ink);
+}
+
+.jwa-panel__close:focus-visible {
+  outline: 2px solid var(--jwa-color);
+  outline-offset: 2px;
+}
+
+.jwa-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  overflow-y: auto;
+}
+
+.jwa-panel__welcome {
+  margin: 0;
+  font-size: 14px;
+  color: var(--jwa-ink);
+}
+
+.jwa-panel__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.jwa-preset {
+  max-width: 100%;
+  padding: 7px 12px;
+  border: 1px solid var(--jwa-line);
+  border-radius: 999px;
+  background-color: transparent;
+  color: var(--jwa-ink);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.jwa-preset:hover {
+  border-color: var(--jwa-color);
+  color: var(--jwa-color-hover);
+  background-color: rgba(37, 211, 102, 0.08);
+}
+
+.jwa-preset:focus-visible {
+  outline: 2px solid var(--jwa-color);
+  outline-offset: 2px;
+}
+
+.jwa-message {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 76px;
+  padding: 10px 12px;
+  border: 1px solid var(--jwa-line);
+  border-radius: 12px;
+  background-color: var(--jwa-surface);
+  color: var(--jwa-ink);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.jwa-message::placeholder {
+  color: var(--jwa-muted);
+}
+
+.jwa-message:focus-visible {
+  outline: 2px solid var(--jwa-color);
+  outline-offset: 1px;
+}
+
+.jwa-panel__footer {
+  padding: 0 14px 14px;
+}
+
+.jwa-send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 999px;
+  background-color: var(--jwa-color);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 650;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.jwa-send:hover {
+  background-color: var(--jwa-color-hover);
+}
+
+.jwa-send:focus-visible {
+  outline: 3px solid var(--jwa-color);
+  outline-offset: 3px;
+}
+
+/* â”€â”€ Accessibility helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+.jwa-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* â”€â”€ Small screens: sit clear of browser chrome and reachability â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+@media (max-width: 480px) {
+  .jwa-root {
+    --jwa-offset: 14px;
+  }
+
+  .jwa-panel {
+    width: calc(100vw - (2 * var(--jwa-offset)));
+  }
+}
+
+/* â”€â”€ Dark themes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+@media (prefers-color-scheme: dark) {
+  .jwa-root {
+    --jwa-surface: #161b22;
+    --jwa-surface-alt: #1d232b;
+    --jwa-ink: #e6edf3;
+    --jwa-muted: #9aa5b1;
+    --jwa-line: #2b323b;
+    --jwa-shadow: 0 18px 44px rgba(0, 0, 0, 0.55), 0 3px 10px rgba(0, 0, 0, 0.4);
+    color-scheme: dark;
+  }
+
+  .jwa-preset:hover {
+    background-color: rgba(37, 211, 102, 0.14);
+  }
+
+  .jwa-panel__status[data-state="open"] {
+    color: #3fb96d;
+  }
+
+  .jwa-panel__status[data-state="closed"] {
+    color: #e3a34a;
+  }
+}
+
+/* â”€â”€ Visitors who asked for less movement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+@media (prefers-reduced-motion: reduce) {
+  .jwa-fab,
+  .jwa-panel,
+  .jwa-preset,
+  .jwa-send,
+  .jwa-panel__close {
+    transition: none;
+    animation: none;
+  }
+
+  .jwa-fab:hover {
+    transform: none;
+  }
+
+  .jwa-fab:active {
+    transform: none;
+  }
+}
+
+/* â”€â”€ Print: a floating chat button has no business on paper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+@media print {
+  .jwa-root {
+    display: none;
+  }
+}

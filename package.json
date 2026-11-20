@@ -1,0 +1,32 @@
+{
+  "name": "brayne-whatsapp-connect",
+  "version": "0.1.0",
+  "private": true,
+  "license": "GPL-2.0-or-later",
+  "author": "Brayne Smart solutions Corp <support@braynesmartsolutions.com>",
+  "homepage": "https://braynesmartsolutions.com",
+  "description": "Floating WhatsApp contact widget for JustFlows sites: configurable number, welcome and preset messages, business hours, and privacy-conscious click counters.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm typecheck:tests",
+    "typecheck:tests": "tsc -p tsconfig.tests.json --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@justflows/sdk": "file:./vendor/justflows-sdk-0.1.9.tgz"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WhatsApp Connect</title>
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <!--
+      The host admin shell mounts this document in a same-origin iframe for the
+      plugin's admin page. Everything the operator sees is built by app.js from
+      the plugin's own /api/brayne-whatsapp-connect/admin-data route; the shell
+      around it (sidebar, page heading) belongs to the host.
+    -->
+    <main id="app" class="jwa-app">
+      <noscript>
+        <p class="jwa-noscript">This screen needs JavaScript to run.</p>
+      </noscript>
+    </main>
+    <script src="app.js" defer></script>
+  </body>
+</html>

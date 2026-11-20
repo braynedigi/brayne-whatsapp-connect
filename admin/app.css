@@ -1,0 +1,713 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
+
+/*
+ * WhatsApp Connect admin app styles.
+ *
+ * The plugin's admin screen runs inside the host admin shell, so its tokens
+ * mirror the host's `--jf-*` design system (light and dark) rather than
+ * inventing a second palette. The only colour the plugin adds is its own:
+ * WhatsApp green, used for accents, the save button, and the widget preview.
+ * The host tells the frame the admin theme over the admin bridge; this file
+ * only reacts to `data-jwa-theme` on the document element.
+ */
+
+:root {
+  --jwa-bg: #f6f7f9;
+  --jwa-surface: #ffffff;
+  --jwa-surface-2: #f8fafc;
+  --jwa-surface-3: #f1f5f9;
+  --jwa-border: #e4e8ee;
+  --jwa-border-strong: #cbd5e1;
+  --jwa-text: #0f172a;
+  --jwa-text-2: #475569;
+  --jwa-text-3: #64748b;
+  --jwa-success: #15803d;
+  --jwa-success-soft: #dcfce7;
+  --jwa-warning: #b45309;
+  --jwa-warning-soft: #fef3c7;
+  --jwa-warning-border: #fcd34d;
+  --jwa-danger: #dc2626;
+  --jwa-danger-soft: #fef2f2;
+  --jwa-danger-border: #fecaca;
+  --jwa-focus: #4f46e5;
+  --jwa-radius-sm: 8px;
+  --jwa-radius: 12px;
+  --jwa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --jwa-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 24px -12px rgba(15, 23, 42, 0.14);
+  --jwa-font:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --jwa-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  --jwa-green: #25d366;
+  --jwa-green-strong: #1da851;
+  --jwa-green-soft: #e7fbef;
+  --jwa-green-border: #b5ecd0;
+  color-scheme: light;
+}
+
+[data-jwa-theme="dark"] {
+  --jwa-bg: #0b1020;
+  --jwa-surface: #121829;
+  --jwa-surface-2: #171e31;
+  --jwa-surface-3: #1d2539;
+  --jwa-border: #242c42;
+  --jwa-border-strong: #33405e;
+  --jwa-text: #e8ecf5;
+  --jwa-text-2: #a6b0c6;
+  --jwa-text-3: #94a3b8;
+  --jwa-success: #4ade80;
+  --jwa-success-soft: #10281b;
+  --jwa-warning: #fbbf24;
+  --jwa-warning-soft: #2a2010;
+  --jwa-warning-border: #4a3a12;
+  --jwa-danger: #f87171;
+  --jwa-danger-soft: #2a1417;
+  --jwa-danger-border: #4c1d21;
+  --jwa-focus: #818cf8;
+  --jwa-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --jwa-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --jwa-green-soft: #10281b;
+  --jwa-green-border: #1d4a2f;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--jwa-bg);
+  color: var(--jwa-text);
+  font-family: var(--jwa-font);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.jwa-app {
+  display: block;
+  padding: 4px 4px 24px;
+  max-width: 960px;
+}
+
+.jwa-noscript {
+  margin: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--jwa-border);
+  border-radius: var(--jwa-radius);
+  background: var(--jwa-surface);
+}
+
+/* ---------------------------------------------------------------- header */
+
+.jwa-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 8px 0 16px;
+}
+
+.jwa-head h1 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.jwa-head .jwa-id {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--jwa-text-3);
+}
+
+.jwa-head-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.jwa-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--jwa-green-border);
+  background: var(--jwa-green-soft);
+  color: var(--jwa-success);
+}
+
+.jwa-pill--muted {
+  border-color: var(--jwa-border);
+  background: var(--jwa-surface-3);
+  color: var(--jwa-text-3);
+}
+
+.jwa-pill .jwa-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+.jwa-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: var(--jwa-radius-sm);
+  padding: 8px 14px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--jwa-text);
+  background: var(--jwa-surface-3);
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    transform 60ms ease;
+}
+
+.jwa-btn:hover {
+  border-color: var(--jwa-border-strong);
+}
+
+.jwa-btn:active {
+  transform: translateY(1px);
+}
+
+.jwa-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--jwa-focus) 25%, transparent);
+}
+
+.jwa-btn--primary {
+  background: var(--jwa-green);
+  color: #06220f;
+}
+
+.jwa-btn--primary:hover {
+  background: var(--jwa-green-strong);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.jwa-btn--ghost {
+  background: transparent;
+  border-color: var(--jwa-border);
+}
+
+.jwa-btn[disabled] {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+}
+
+/* -------------------------------------------------------------- banners */
+
+.jwa-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--jwa-radius);
+  border: 1px solid var(--jwa-warning-border);
+  background: var(--jwa-warning-soft);
+  margin: 0 0 16px;
+}
+
+.jwa-banner__text {
+  flex: 1;
+}
+
+.jwa-banner__title {
+  margin: 0;
+  font-weight: 700;
+  color: var(--jwa-warning);
+  font-size: 13px;
+}
+
+.jwa-banner__body {
+  margin: 2px 0 0;
+  color: var(--jwa-text-2);
+  font-size: 13px;
+}
+
+.jwa-banner--error {
+  border-color: var(--jwa-danger-border);
+  background: var(--jwa-danger-soft);
+}
+
+.jwa-banner--error .jwa-banner__title {
+  color: var(--jwa-danger);
+}
+
+.jwa-banner--success {
+  border-color: var(--jwa-green-border);
+  background: var(--jwa-green-soft);
+}
+
+.jwa-banner--success .jwa-banner__title {
+  color: var(--jwa-success);
+}
+
+/* ------------------------------------------------------------ stat tiles */
+
+.jwa-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 0 0 16px;
+}
+
+.jwa-stat {
+  background: var(--jwa-surface);
+  border: 1px solid var(--jwa-border);
+  border-radius: var(--jwa-radius);
+  padding: 14px 16px;
+  box-shadow: var(--jwa-shadow-sm);
+}
+
+.jwa-stat__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--jwa-text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.jwa-stat__value {
+  margin-top: 6px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.jwa-stat__value--muted {
+  color: var(--jwa-text-3);
+  font-size: 20px;
+}
+
+.jwa-stat__note {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--jwa-text-3);
+}
+
+/* ----------------------------------------------------------------- cards */
+
+.jwa-card {
+  background: var(--jwa-surface);
+  border: 1px solid var(--jwa-border);
+  border-radius: var(--jwa-radius);
+  box-shadow: var(--jwa-shadow-sm);
+  margin: 0 0 16px;
+  overflow: hidden;
+}
+
+.jwa-card__head {
+  padding: 14px 20px 0;
+}
+
+.jwa-card__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.jwa-card__body {
+  padding: 12px 20px 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.jwa-defs {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 8px 16px;
+  align-items: baseline;
+}
+
+.jwa-defs dt {
+  color: var(--jwa-text-3);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.jwa-defs dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.jwa-defs .jwa-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--jwa-border-strong);
+  vertical-align: -2px;
+  margin-right: 6px;
+}
+
+.jwa-hours-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--jwa-radius-sm);
+  border: 1px solid var(--jwa-border);
+  background: var(--jwa-surface-2);
+  font-weight: 600;
+}
+
+.jwa-hours-state--open {
+  border-color: var(--jwa-green-border);
+  background: var(--jwa-green-soft);
+  color: var(--jwa-success);
+}
+
+.jwa-hours-state--closed {
+  border-color: var(--jwa-warning-border);
+  background: var(--jwa-warning-soft);
+  color: var(--jwa-warning);
+}
+
+/* ------------------------------------------------------- widget preview */
+
+.jwa-preview {
+  position: relative;
+  border: 1px solid var(--jwa-border);
+  border-radius: var(--jwa-radius-sm);
+  background: linear-gradient(var(--jwa-surface-2), var(--jwa-surface-2)) content-box;
+  height: 132px;
+  overflow: hidden;
+}
+
+.jwa-preview::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px dashed var(--jwa-border-strong);
+  border-radius: 6px;
+  opacity: 0.6;
+}
+
+.jwa-preview__fab {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--jwa-green);
+  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.5);
+}
+
+.jwa-preview__fab svg {
+  width: 58%;
+  height: 58%;
+  fill: #ffffff;
+}
+
+/* ------------------------------------------------------------------ tabs */
+
+.jwa-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--jwa-border);
+  margin: 0 0 16px;
+  overflow-x: auto;
+}
+
+.jwa-tab {
+  appearance: none;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--jwa-text-3);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.jwa-tab:hover {
+  color: var(--jwa-text);
+}
+
+.jwa-tab[aria-selected="true"] {
+  color: var(--jwa-text);
+  border-bottom-color: var(--jwa-green);
+}
+
+.jwa-tab:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--jwa-focus) 25%, transparent);
+  border-radius: 6px 6px 0 0;
+}
+
+/* ---------------------------------------------------------------- fields */
+
+.jwa-field {
+  display: grid;
+  gap: 6px;
+}
+
+.jwa-field__label {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.jwa-field__hint {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--jwa-text-3);
+}
+
+.jwa-field__error {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--jwa-danger);
+}
+
+.jwa-input {
+  width: 100%;
+  font: inherit;
+  color: var(--jwa-text);
+  background: var(--jwa-surface-2);
+  border: 1px solid var(--jwa-border-strong);
+  border-radius: var(--jwa-radius-sm);
+  padding: 9px 12px;
+}
+
+.jwa-input:focus-visible {
+  outline: none;
+  border-color: var(--jwa-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--jwa-focus) 18%, transparent);
+}
+
+.jwa-input[aria-invalid="true"] {
+  border-color: var(--jwa-danger);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--jwa-danger) 15%, transparent);
+}
+
+textarea.jwa-input {
+  resize: vertical;
+  min-height: 84px;
+}
+
+.jwa-checkrow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.jwa-checkrow input[type="checkbox"] {
+  margin: 3px 0 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--jwa-green);
+  flex: none;
+}
+
+.jwa-checkrow__text {
+  display: grid;
+  gap: 2px;
+}
+
+.jwa-checkrow__label {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.jwa-checkrow__meta {
+  font-size: 12.5px;
+  color: var(--jwa-text-3);
+}
+
+/* --------------------------------------------------- tile choice groups */
+
+.jwa-tiles {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.jwa-tile {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  border: 1px solid var(--jwa-border);
+  border-radius: var(--jwa-radius-sm);
+  background: var(--jwa-surface-2);
+  padding: 10px 12px;
+  cursor: pointer;
+  min-width: 108px;
+}
+
+.jwa-tile:hover {
+  border-color: var(--jwa-border-strong);
+}
+
+.jwa-tile input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.jwa-tile__box {
+  position: relative;
+  width: 108px;
+  height: 58px;
+  border: 1px solid var(--jwa-border);
+  border-radius: 6px;
+  background: var(--jwa-surface-3);
+  overflow: hidden;
+}
+
+.jwa-tile__box .jwa-preview__fab {
+  width: 16px;
+  height: 16px;
+}
+
+.jwa-tile__label {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.jwa-tile:has(input:checked) {
+  border-color: var(--jwa-green);
+  background: var(--jwa-green-soft);
+}
+
+.jwa-tile:has(input:focus-visible) {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--jwa-focus) 25%, transparent);
+}
+
+.jwa-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--jwa-border);
+  border-radius: 999px;
+  padding: 6px 12px 6px 8px;
+  cursor: pointer;
+  background: var(--jwa-surface-2);
+}
+
+.jwa-swatch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.jwa-swatch__dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.jwa-swatch__name {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.jwa-swatch:has(input:checked) {
+  border-color: var(--jwa-green);
+  background: var(--jwa-green-soft);
+}
+
+/* --------------------------------------------------------------- privacy */
+
+.jwa-privacy-list {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  color: var(--jwa-text-2);
+}
+
+/* ---------------------------------------------------------------- toast */
+
+.jwa-toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--jwa-green-soft);
+  border: 1px solid var(--jwa-green-border);
+  color: var(--jwa-success);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  box-shadow: var(--jwa-shadow);
+  z-index: 10;
+}
+
+.jwa-toast .jwa-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* -------------------------------------------------------------- skeleton */
+
+.jwa-skeleton {
+  height: 220px;
+  border-radius: var(--jwa-radius);
+  background: linear-gradient(
+    100deg,
+    var(--jwa-surface-2) 40%,
+    var(--jwa-surface-3) 50%,
+    var(--jwa-surface-2) 60%
+  );
+  background-size: 200% 100%;
+  animation: jwa-shimmer 1.2s infinite;
+  border: 1px solid var(--jwa-border);
+}
+
+@keyframes jwa-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .jwa-defs {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .jwa-defs dt {
+    margin-top: 6px;
+  }
+
+  .jwa-head-actions {
+    margin-left: 0;
+    width: 100%;
+  }
+}
