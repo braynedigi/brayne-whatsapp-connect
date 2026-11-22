@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 
 /*
- * Brayne WhatsApp Connect â€” widget styles.
+ * Brayne WhatsApp Connect — widget styles.
  *
  * Everything is namespaced under `.jwa-` so a theme's own selectors cannot
  * collide with it, and every value the operator can change is a custom
@@ -57,7 +57,7 @@
   --jwa-size: 64px;
 }
 
-/* â”€â”€ Floating action button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Floating action button ─────────────────────────────────────────────── */
 
 .jwa-fab {
   display: grid;
@@ -97,7 +97,7 @@
   height: 56%;
 }
 
-/* â”€â”€ Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Panel ──────────────────────────────────────────────────────────────── */
 
 .jwa-panel {
   position: absolute;
@@ -323,7 +323,7 @@
   outline-offset: 3px;
 }
 
-/* â”€â”€ Accessibility helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Accessibility helpers ──────────────────────────────────────────────── */
 
 .jwa-visually-hidden {
   position: absolute;
@@ -338,7 +338,7 @@
   white-space: nowrap;
 }
 
-/* â”€â”€ Small screens: sit clear of browser chrome and reachability â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Small screens: sit clear of browser chrome and reachability ────────── */
 
 @media (max-width: 480px) {
   .jwa-root {
@@ -350,7 +350,7 @@
   }
 }
 
-/* â”€â”€ Dark themes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Dark themes ────────────────────────────────────────────────────────── */
 
 @media (prefers-color-scheme: dark) {
   .jwa-root {
@@ -376,7 +376,7 @@
   }
 }
 
-/* â”€â”€ Visitors who asked for less movement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Visitors who asked for less movement ───────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   .jwa-fab,
@@ -397,7 +397,7 @@
   }
 }
 
-/* â”€â”€ Print: a floating chat button has no business on paper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Print: a floating chat button has no business on paper ─────────────── */
 
 @media print {
   .jwa-root {

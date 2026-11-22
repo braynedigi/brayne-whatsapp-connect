@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 /**
- * Brayne WhatsApp Connect â€” front-end widget.
+ * Brayne WhatsApp Connect — front-end widget.
  *
  * The host injects this file on every public page from the manifest's
  * `assets.scripts` entry: a `<script defer>` tag, or concatenated into the
@@ -12,7 +12,7 @@
  * Settings are never inlined into the page. `html.head` is a synchronous
  * filter and cannot await `ctx.settings`, so the widget asks
  * `GET /api/brayne-whatsapp-connect/config` instead and renders nothing if
- * that request fails â€” a missing widget is better than a wrong one.
+ * that request fails — a missing widget is better than a wrong one.
  *
  * Interactions are counted with `POST .../analytics?event=<name>` carrying no
  * request body. Without a body the browser sends no `Content-Type`, which
@@ -165,7 +165,7 @@
   }
 
   /**
-   * "Monâ€“Fri", "Every day", or an explicit list â€” the same day sets the
+   * "Mon–Fri", "Every day", or an explicit list — the same day sets the
    * server's `DAY_SETS` knows about.
    *
    * @param {number[]} days
@@ -177,8 +177,8 @@
       return a - b;
     });
     var key = sorted.join(",");
-    if (key === "1,2,3,4,5") return "Monâ€“Fri";
-    if (key === "1,2,3,4,5,6") return "Monâ€“Sat";
+    if (key === "1,2,3,4,5") return "Mon–Fri";
+    if (key === "1,2,3,4,5,6") return "Mon–Sat";
     if (key === "0,1,2,3,4,5,6") return "Every day";
     var names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return sorted
@@ -194,7 +194,7 @@
    * never interrupt a visitor who is trying to send a message.
    *
    * `keepalive` is what lets the request outlive the page, so the older
-   * `navigator.sendBeacon` fallback is unnecessary â€” and it would have sent
+   * `navigator.sendBeacon` fallback is unnecessary — and it would have sent
    * cookies this call deliberately omits.
    *
    * @param {string} event
@@ -203,7 +203,7 @@
     if (!currentConfig || !currentConfig.analytics) return;
     var url = ANALYTICS_URL + "?event=" + encodeURIComponent(event);
     try {
-      // No body â†’ no Content-Type â†’ CORS simple request, so no preflight.
+      // No body → no Content-Type → CORS simple request, so no preflight.
       fetch(url, { method: "POST", keepalive: true, credentials: "omit" }).catch(function () {});
     } catch (err) {
       /* ignore */
@@ -262,7 +262,7 @@
 
     var header = el("div", "jwa-panel__header");
 
-    var avatar = el("span", "jwa-panel__avatar", "ðŸ’¬");
+    var avatar = el("span", "jwa-panel__avatar", "💬");
     avatar.setAttribute("aria-hidden", "true");
 
     var heading = el("div", "jwa-panel__heading");
@@ -272,7 +272,7 @@
     statusEl = el("p", "jwa-panel__status");
     heading.appendChild(statusEl);
 
-    var close = el("button", "jwa-panel__close", "Ã—");
+    var close = el("button", "jwa-panel__close", "×");
     close.type = "button";
     close.setAttribute("aria-label", "Close chat panel");
     close.addEventListener("click", closePanel);
@@ -310,7 +310,7 @@
     messageEl.id = MESSAGE_ID;
     messageEl.rows = 3;
     messageEl.maxLength = 1000;
-    messageEl.placeholder = "Type a messageâ€¦";
+    messageEl.placeholder = "Type a message…";
     messageEl.value = config.welcome;
     messageEl.addEventListener("input", syncSendLink);
 
@@ -338,9 +338,9 @@
     if (!statusEl) return;
     var hours = config.hours;
     if (hours.enabled) {
-      statusEl.textContent = hours.openNow ? "Open now" : "Closed â€” messages welcome";
+      statusEl.textContent = hours.openNow ? "Open now" : "Closed — messages welcome";
       statusEl.setAttribute("data-state", hours.openNow ? "open" : "closed");
-      statusEl.title = daysLabel(hours.days) + " Â· " + hours.open + "â€“" + hours.close;
+      statusEl.title = daysLabel(hours.days) + " · " + hours.open + "–" + hours.close;
       return;
     }
     statusEl.textContent = "We usually reply within a few minutes.";
@@ -443,7 +443,7 @@
     syncSendLink();
   }
 
-  /** Tear the widget down â€” used when a re-sync reports it was switched off. */
+  /** Tear the widget down — used when a re-sync reports it was switched off. */
   function unmount() {
     if (resyncTimer) {
       clearInterval(resyncTimer);
@@ -504,7 +504,7 @@
 
         /**
          * Already on the page: refresh only what may drift without the
-         * visitor noticing â€” the corner, the colour, the link target and the
+         * visitor noticing — the corner, the colour, the link target and the
          * Open / Closed badge. The message box and the quick replies are left
          * alone so a re-sync never overwrites text someone is halfway
          * through typing.
