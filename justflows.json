@@ -61,10 +61,16 @@
       "description": "International format without spaces or brackets, e.g. 15551234567 or +233201234567. Leave empty to hide the button.",
       "default": ""
     },
-    "welcomeMessage": {
+    "welcomeMessageOpen": {
       "type": "text",
-      "label": "Welcome message",
-      "description": "Prefills the chat when a visitor opens the button.",
+      "label": "Welcome message while open",
+      "description": "Prefills the chat when a visitor opens the button during business hours.",
+      "default": "Hi! I'd like to know more about your services."
+    },
+    "welcomeMessageClosed": {
+      "type": "text",
+      "label": "Welcome message while closed",
+      "description": "Prefills the chat when the business is closed. Falls back to the open message until you set it.",
       "default": "Hi! I'd like to know more about your services."
     },
     "presetMessages": {
@@ -105,27 +111,17 @@
       "description": "Shows an Open / Closed badge and, when closed, still lets visitors leave a message.",
       "default": false
     },
-    "businessOpenTime": {
-      "type": "string",
-      "label": "Opening time",
-      "description": "24-hour clock, HH:MM.",
-      "default": "09:00"
+    "schedule": {
+      "type": "text",
+      "label": "Weekly schedule",
+      "description": "JSON list of opening windows. Shape: [{\"days\": [1,2,3,4,5], \"open\": \"09:00\", \"close\": \"17:00\"}]. Days: 0 = Sunday … 6 = Saturday. A close time at or before the open time runs past midnight.",
+      "default": "[{\"days\":[1,2,3,4,5],\"open\":\"09:00\",\"close\":\"17:00\"}]"
     },
-    "businessCloseTime": {
-      "type": "string",
-      "label": "Closing time",
-      "description": "24-hour clock, HH:MM.",
-      "default": "17:00"
-    },
-    "businessDays": {
-      "type": "select",
-      "label": "Open days",
-      "default": "weekdays",
-      "options": [
-        { "value": "weekdays", "label": "Monday to Friday" },
-        { "value": "mon-sat", "label": "Monday to Saturday" },
-        { "value": "daily", "label": "Every day" }
-      ]
+    "holidays": {
+      "type": "text",
+      "label": "Holidays and exceptions",
+      "description": "JSON list of closed days. Shape: [{\"date\": \"2026-12-25\", \"label\": \"Christmas Day\"}] or a range: [{\"from\": \"2026-12-20\", \"to\": \"2026-12-31\", \"label\": \"Holiday break\"}]. The label shows on the badge while closed.",
+      "default": "[]"
     },
     "businessTimezone": {
       "type": "select",
@@ -135,11 +131,146 @@
       "options": [{ "value": "", "label": "Site default" }],
       "optionsSource": "timezones"
     },
+    "openLabel": {
+      "type": "string",
+      "label": "Open badge text",
+      "description": "Custom text for the open badge. Leave empty for 'Open now'.",
+      "default": ""
+    },
+    "closedLabel": {
+      "type": "string",
+      "label": "Closed badge text",
+      "description": "Custom text for the closed badge. Leave empty for 'Closed — opens <day time>' when the next opening is known.",
+      "default": ""
+    },
+    "closedExtra": {
+      "type": "string",
+      "label": "Extra closed line",
+      "description": "Optional second line under the closed badge, e.g. 'We reply when we reopen.'",
+      "default": ""
+    },
+    "openColor": {
+      "type": "string",
+      "label": "Open badge colour",
+      "description": "Hex colour for the open badge. Leave empty for green.",
+      "default": ""
+    },
+    "closedColor": {
+      "type": "string",
+      "label": "Closed badge colour",
+      "description": "Hex colour for the closed badge. Leave empty for amber.",
+      "default": ""
+    },
+    "departments": {
+      "type": "text",
+      "label": "Departments",
+      "description": "JSON list of routing chips. Shape: [{\"name\": \"Sales\", \"number\": \"+233201234567\", \"icon\": \"💼\"}]. With two or more, visitors pick who to chat with; the icon is optional.",
+      "default": "[]"
+    },
+    "catalogUrl": {
+      "type": "string",
+      "label": "Catalog link",
+      "description": "Your WhatsApp Business catalog deep link (https://wa.me/c/...). Shows a 'Browse products' chip in the panel.",
+      "default": ""
+    },
+    "leadFormEnabled": {
+      "type": "boolean",
+      "label": "Show a pre-chat lead form",
+      "description": "Asks for a name and consent before the chat opens. The details go into the visitor's own WhatsApp message — the plugin stores nothing.",
+      "default": false
+    },
+    "leadInterests": {
+      "type": "text",
+      "label": "Lead form interests",
+      "description": "One per line. Each becomes an option in the lead form's interest selector. Leave empty for no selector.",
+      "default": ""
+    },
+    "leadConsentText": {
+      "type": "text",
+      "label": "Lead form consent line",
+      "description": "The sentence the visitor agrees to before continuing. Required while the lead form is on.",
+      "default": "I agree that my name and message will be sent to this business over WhatsApp."
+    },
     "analyticsEnabled": {
       "type": "boolean",
       "label": "Count widget interactions",
       "description": "Counts button opens, preset taps and sends as bare numbers. No IP address, phone number, visitor id or cookie is stored.",
       "default": true
+    },
+    "analyticsPages": {
+      "type": "boolean",
+      "label": "Count which pages open the widget",
+      "description": "Adds the page path (never the query string) to the open counter, so you can see which pages start chats. Aggregate only — still no visitor data.",
+      "default": false
+    },
+    "nudgeEnabled": {
+      "type": "boolean",
+      "label": "Show a nudge bubble",
+      "description": "A small teaser appears near the button after a delay, inviting the visitor to chat. It never shows once they have opened the panel themselves.",
+      "default": false
+    },
+    "nudgeDelaySeconds": {
+      "type": "string",
+      "label": "Nudge delay (seconds)",
+      "description": "How long to wait before the teaser appears. 5 to 300 seconds.",
+      "default": "15"
+    },
+    "nudgeText": {
+      "type": "text",
+      "label": "Nudge text",
+      "description": "The teaser line. Keep it short.",
+      "default": "👋 Need help? We're here to chat."
+    },
+    "nudgeMode": {
+      "type": "select",
+      "label": "Show the nudge",
+      "description": "Once per page load, or once per day — the day mode remembers the dismissal in the visitor's browser only (a single date flag, nothing else).",
+      "default": "once-per-load",
+      "options": [
+        { "value": "once-per-load", "label": "Once per page load" },
+        { "value": "once-per-day", "label": "Once per day" }
+      ]
+    },
+    "widgetLanguage": {
+      "type": "select",
+      "label": "Widget language",
+      "description": "Language of the widget's own text. 'Visitor's browser' uses each visitor's browser language when a translation exists.",
+      "default": "",
+      "options": [
+        { "value": "", "label": "Site language" },
+        { "value": "auto", "label": "Visitor's browser language" },
+        { "value": "en", "label": "English" }
+      ]
+    },
+    "pageRules": {
+      "type": "text",
+      "label": "Page rules",
+      "description": "Optional JSON list. Each rule changes the welcome message and quick replies on matching pages. Shape: [{\"pattern\": \"/pricing\", \"welcome\": \"Want a quote?\", \"presets\": [\"Send pricing\"]}]. Patterns are anchored path globs matched in order: /pricing matches that page exactly, /pricing/* matches every page below it, and ? stands for one character.",
+      "default": ""
+    },
+    "agentName": {
+      "type": "string",
+      "label": "Agent name",
+      "description": "Name shown in the chat header. Leave empty for the generic 'Chat with us'.",
+      "default": ""
+    },
+    "agentRole": {
+      "type": "string",
+      "label": "Agent role",
+      "description": "Optional line under the agent name, e.g. 'Sales at Brayne'.",
+      "default": ""
+    },
+    "agentPhoto": {
+      "type": "string",
+      "label": "Agent photo URL",
+      "description": "A same-site media path (/media/...) or https image URL for the chat header. Leave empty for the emoji avatar.",
+      "default": ""
+    },
+    "utmPropagation": {
+      "type": "boolean",
+      "label": "Append UTM tags to messages",
+      "description": "Adds the page's utm_source, utm_medium and utm_campaign to the visitor's prefilled message, so you can see where a lead came from. Nothing is stored by the plugin.",
+      "default": false
     }
   },
   "assets": {

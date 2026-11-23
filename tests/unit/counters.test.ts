@@ -3,6 +3,10 @@ import type { PluginContext, PluginDataApi, PluginDataRecord } from "@justflows/
 import {
   ensureCounters,
   incrementCounter,
+  incrementDayCounter,
+  incrementDepartmentCounter,
+  incrementHourCounter,
+  incrementPageCounter,
   isAnalyticsEvent,
   readCounters,
 } from "../../src/counters.js";
@@ -107,8 +111,8 @@ function contextWith(data: PluginDataApi): PluginContext {
 }
 
 describe("isAnalyticsEvent", () => {
-  it("accepts exactly the four events the widget can send", () => {
-    expect([...ANALYTICS_EVENTS]).toEqual(["open", "close", "preset", "send"]);
+  it("accepts exactly the five events the widget can send", () => {
+    expect([...ANALYTICS_EVENTS]).toEqual(["open", "close", "preset", "send", "lead"]);
     for (const event of ANALYTICS_EVENTS) expect(isAnalyticsEvent(event)).toBe(true);
   });
 
@@ -128,6 +132,7 @@ describe("ensureCounters", () => {
 
     expect([...rows.keys()].sort()).toEqual([
       "analytics close",
+      "analytics lead",
       "analytics open",
       "analytics preset",
       "analytics send",
@@ -184,7 +189,13 @@ describe("readCounters", () => {
     await ensureCounters(ctx);
     await incrementCounter(ctx, "preset");
 
-    expect(await readCounters(ctx)).toEqual({ open: 0, close: 0, preset: 1, send: 0 });
+    expect(await readCounters(ctx)).toEqual({
+      open: 0,
+      close: 0,
+      preset: 1,
+      send: 0,
+      lead: 0,
+    });
   });
 
   it("ignores rows this plugin does not own", async () => {
@@ -194,7 +205,13 @@ describe("readCounters", () => {
     await api.put("analytics", "not-an-event", { count: 999 });
     await api.put("some-other-collection", "open", { count: 12345 });
 
-    expect(await readCounters(ctx)).toEqual({ open: 0, close: 0, preset: 0, send: 0 });
+    expect(await readCounters(ctx)).toEqual({
+      open: 0,
+      close: 0,
+      preset: 0,
+      send: 0,
+      lead: 0,
+    });
   });
 
   it("treats a malformed row as zero rather than throwing", async () => {
@@ -203,6 +220,83 @@ describe("readCounters", () => {
     await api.put("analytics", "open", { count: "lots" });
     await api.put("analytics", "close", "not an object");
 
-    expect(await readCounters(ctx)).toEqual({ open: 0, close: 0, preset: 0, send: 0 });
+    expect(await readCounters(ctx)).toEqual({
+      open: 0,
+      close: 0,
+      preset: 0,
+      send: 0,
+      lead: 0,
+    });
+  });
+});
+
+describe("department counters", () => {
+  it("records sends per department under send:<index>", async () => {
+    const { api } = createData();
+    const ctx = contextWith(api);
+    await ensureCounters(ctx);
+    expect(await incrementDepartmentCounter(ctx, 1)).toBe(1);
+    expect(await incrementDepartmentCounter(ctx, 1)).toBe(2);
+    expect(await incrementDepartmentCounter(ctx, 0)).toBe(1);
+
+    expect(await readCounters(ctx)).toMatchObject({ "send:0": 1, "send:1": 2 });
+  });
+
+  it("refuses indexes outside the department range", async () => {
+    const { api } = createData();
+    const ctx = contextWith(api);
+    await ensureCounters(ctx);
+    for (const bad of [-1, 5, 1.5, Number.NaN]) {
+      expect(await incrementDepartmentCounter(ctx, bad)).toBe(null);
+    }
+    expect(await readCounters(ctx)).toMatchObject({ send: 0 });
+  });
+});
+
+describe("day, hour and page buckets", () => {
+  it("records trend-chart day buckets", async () => {
+    const { api } = createData();
+    const ctx = contextWith(api);
+    await ensureCounters(ctx);
+    expect(await incrementDayCounter(ctx, "open", "2026-11-17")).toBe(1);
+    expect(await incrementDayCounter(ctx, "open", "2026-11-17")).toBe(2);
+    expect(await incrementDayCounter(ctx, "send", "2026-11-16")).toBe(1);
+
+    expect(await readCounters(ctx)).toMatchObject({
+      "open:2026-11-17": 2,
+      "send:2026-11-16": 1,
+    });
+  });
+
+  it("records busiest-hours buckets", async () => {
+    const { api } = createData();
+    const ctx = contextWith(api);
+    await ensureCounters(ctx);
+    expect(await incrementHourCounter(ctx, "open", 9)).toBe(1);
+    expect(await incrementHourCounter(ctx, "send", 17)).toBe(1);
+
+    expect(await readCounters(ctx)).toMatchObject({ "openhour:9": 1, "sendhour:17": 1 });
+  });
+
+  it("records page buckets for the path breakdown", async () => {
+    const { api } = createData();
+    const ctx = contextWith(api);
+    await ensureCounters(ctx);
+    expect(await incrementPageCounter(ctx, "/pricing", "2026-11-17")).toBe(1);
+
+    expect(await readCounters(ctx)).toMatchObject({ "openpage:/pricing:2026-11-17": 1 });
+  });
+
+  it("refuses malformed bucket arguments", async () => {
+    const { api } = createData();
+    const ctx = contextWith(api);
+    await ensureCounters(ctx);
+    expect(await incrementDayCounter(ctx, "open", "17-11-2026")).toBe(null);
+    expect(await incrementDayCounter(ctx, "open", "2026-11-17; DROP")).toBe(null);
+    expect(await incrementHourCounter(ctx, "open", 24)).toBe(null);
+    expect(await incrementHourCounter(ctx, "open", -1)).toBe(null);
+    expect(await incrementPageCounter(ctx, "", "2026-11-17")).toBe(null);
+    expect(await incrementPageCounter(ctx, "/ok", "not-a-date")).toBe(null);
+    expect(await readCounters(ctx)).toEqual({ open: 0, close: 0, preset: 0, send: 0, lead: 0 });
   });
 });
