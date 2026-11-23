@@ -329,7 +329,7 @@ const brayneWhatsAppConnect: PluginModule = {
     id: PLUGIN_ID,
     apiNamespace: API_NAMESPACE,
     name: "Brayne WhatsApp Connect",
-    version: "0.1.0",
+    version: "0.2.0",
     description:
       "Adds a floating WhatsApp contact button with a welcome message, preset replies, configurable position and colours, and business-hours open/closed state.",
     author: "Brayne Smart solutions Corp",

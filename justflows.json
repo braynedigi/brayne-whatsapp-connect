@@ -4,7 +4,7 @@
   "id": "justflows.brayne-whatsapp-connect",
   "apiNamespace": "brayne-whatsapp-connect",
   "name": "Brayne WhatsApp Connect",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "Brayne",
   "license": "GPL-2.0-or-later",
   "engines": {
